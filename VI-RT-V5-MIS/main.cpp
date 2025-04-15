@@ -20,7 +20,6 @@
 #include "BuildScenes.hpp"
 #include <time.h>
 
-
 int main(int argc, const char * argv[]) {
     Scene scene;
     ImagePPM *img;    // Image
@@ -42,6 +41,7 @@ int main(int argc, const char * argv[]) {
     //SpheresTriScene(scene);
     // Camera parameters for the simple scenes
     //const Point Eye ={0,0,0}, At={0,0,1};
+    //DLightChallenge(scene);
     /* Cornell Box */
     CornellBox(scene);
     //DiffuseCornellBox(scene);
@@ -84,7 +84,7 @@ int main(int argc, const char * argv[]) {
     //shd = new DistributedShader(&scene, RGB(0.1,0.1,0.8));
     shd = new PathTracing(&scene, RGB(0.,0.,0.2));
     // declare the renderer
-    int const spp=64;
+    int const spp=16;
     
     bool const jitter=true;
     StandardRenderer myRender (cam, &scene, img, shd, spp, jitter);

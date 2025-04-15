@@ -113,9 +113,12 @@ RGB PathTracing::diffuseReflection (Intersection isect, BRDF *f, int depth) {
     
     // Sample the HemiSphere
     // Uniform
-    //pdf = UniformHemiSphereSample (rnd, D_around_Z);
+    // pdf = UniformHemiSphereSample (rnd, D_around_Z);
     // Cosine Sampled
     pdf = CosineHemiSphereSample (rnd, D_around_Z);
+    
+    // avoid divisions by zero
+    if (pdf < 1e-5) return color;
 
     // independently of the sampling function
     // the cosine of theta is always equal do D_around_Z.Z
@@ -157,10 +160,6 @@ RGB PathTracing::diffuseReflection (Intersection isect, BRDF *f, int depth) {
 RGB PathTracing::shade(bool intersected, Intersection isect, int depth) {
     RGB color(0.,0.,0.);
     
-    /*if ((isect.pix_x==320) && (isect.pix_y==320)) {
-        fprintf (stderr, "(%d,%d) \n ", isect.pix_x, isect.pix_y);
-        fflush(stderr);
-    }*/
     // if no intersection, return background
     if (!intersected) {
         return (background);
@@ -173,8 +172,8 @@ RGB PathTracing::shade(bool intersected, Intersection isect, int depth) {
     
     
     // Russian Roullette
-    #define MIN_DEPTH 2
-    #define CONTINUE_PROB 0.f
+    #define MIN_DEPTH 1
+    #define CONTINUE_PROB 0.2f
     float continueRecurseProb =  U_dist(rng);
     if (depth<MIN_DEPTH || continueRecurseProb<= CONTINUE_PROB) {
 
@@ -201,31 +200,40 @@ RGB PathTracing::shade(bool intersected, Intersection isect, int depth) {
             // if there is a specular component sample it
             //if (!f->Ks.isZero()) {
             if (pdf[0] > 1.e-4) {  //Ks
-                color += specularReflection (isect, f, depth);
-                color /= pdf[0];
+                RGB scolor;
+                scolor = specularReflection (isect, f, depth);
+                scolor /= pdf[0];
+                color += scolor;
             }
         } else if (which_phenomenon <= cdf[1]) {
             
             // if there is a specular component sample it
             //if (!f->Kt.isZero()) {
             if (pdf[1] > 1.e-4) {  //Kt
-                color += specularTransmission (isect, f, depth);
-                color /= pdf[1];
+                RGB tcolor;
+                tcolor = specularTransmission (isect, f, depth);
+                tcolor /= pdf[1];
+                color += tcolor;
             }
         } else {
             // if there is a diffuse component sample it
             // do one bounce (do not recurse on indirect diffuse)
             //if (!f->Kd.isZero() && isect.r_type != DIFF_REFL) {
             if (pdf[2] > 1.e-4 && isect.r_type != DIFF_REFL) {  //Kd
-                color += diffuseReflection (isect, f, depth);
-                color /= pdf[2];
+            //if (pdf[2] > 1.e-4 ) {  //Kd
+                RGB dcolor;
+                dcolor = diffuseReflection (isect, f, depth);
+                dcolor /= pdf[2];
+                color += dcolor;
             }
         }
         if (depth>= MIN_DEPTH) color /= CONTINUE_PROB;
     }
     if (!f->Kd.isZero()) {
-        color += directLighting(scene, isect, f, rng, U_dist, UNIFORM_ONE);
-        //color += directLighting(scene, isect, f, rng, U_dist, ALL_LIGHTS);
+        RGB dir_color;
+        dir_color = directLighting(scene, isect, f, rng, U_dist, UNIFORM_ONE);
+        //dir_color = directLighting(scene, isect, f, rng, U_dist, ALL_LIGHTS);
+        color += dir_color;
     }
     return color;
 };

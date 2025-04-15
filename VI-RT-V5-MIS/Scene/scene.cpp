@@ -59,14 +59,14 @@ bool Scene::trace (Ray r, Intersection *isect) {
                     intersection = true;
                     *isect = curr_isect;
                     isect->isLight = true;
-                    //isect->Le = RGB(2.,2.,2.);
+                    //isect->Le = RGB(0.,0.,0.);
                     isect->Le = al->L();
                 }
                 else if (curr_isect.depth < isect->depth) {
                     *isect = curr_isect;
                     isect->isLight = true;
                     isect->Le = al->L();
-                    //isect->Le = RGB(2.,2.,2.);
+                    //isect->Le = RGB(0.,0.,0.);
                 }
             }
         }

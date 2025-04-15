@@ -71,19 +71,24 @@ bool ImagePPM::Save (std::string filename) {
 }
 
 bool ImagePPM::Load (std::string filename) {
+    char ss[256];
     std::ifstream ifs;
      ifs.open(filename, std::ios::binary);
      // need to spec. binary mode for Windows users
      //Image src;
      try {
          if (ifs.fail()) {
-             throw("Can't open input file");
+             snprintf(ss, 255, "Can't open input texture file: %s", filename.c_str());
+             throw(ss);
              return false;
          }
          std::string header;
          int w, h, b;
          ifs >> header;
-         if (strcmp(header.c_str(), "P6") != 0) throw("Can't read input file");
+         if (strcmp(header.c_str(), "P6") != 0) {
+             snprintf(ss, 255, "Can't read input texture file: %s (wrong format)", filename.c_str());
+             throw(ss);
+         }
          ifs >> w >> h >> b;
          W = w;
          H = h;
