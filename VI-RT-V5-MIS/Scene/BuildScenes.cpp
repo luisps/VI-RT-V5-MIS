@@ -232,10 +232,10 @@ void CornellBox (Scene& scene) {
     }
 #else
     for (int lll=-1 ; lll<2 ; lll++) {
-        AreaLight *a1 = new AreaLight(RGB(250000.,250000.,250000.), Point(250.+lll*150, 545., 250.+lll*150), Point(300.+lll*150, 545., 250.+lll*150), Point(300.+lll*150, 545., 300.+lll*150), Vector (0.,-1.,0.));
+        AreaLight *a1 = new AreaLight(RGB(250000.,250000.,250000.), Point(250.+lll*150, 548.75, 250.+lll*150), Point(300.+lll*150, 548.75, 250.+lll*150), Point(300.+lll*150, 548.75, 300.+lll*150), Vector (0.,-1.,0.));
             scene.lights.push_back(a1);
             scene.numLights++;
-        AreaLight *a2 = new AreaLight(RGB(250000.,250000.,250000.), Point(250.+lll*150, 545., 250.+lll*150), Point(250.+lll*150, 545., 300.+lll*150), Point(300.+lll*150, 545., 300.+lll*150), Vector (0.,-1.,0.));
+        AreaLight *a2 = new AreaLight(RGB(250000.,250000.,250000.), Point(250.+lll*150, 548.75, 250.+lll*150), Point(250.+lll*150, 548.75, 300.+lll*150), Point(300.+lll*150, 548.75, 300.+lll*150), Vector (0.,-1.,0.));
             scene.lights.push_back(a2);
             scene.numLights++;
     }

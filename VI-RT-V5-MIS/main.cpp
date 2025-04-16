@@ -41,9 +41,9 @@ int main(int argc, const char * argv[]) {
     //SpheresTriScene(scene);
     // Camera parameters for the simple scenes
     //const Point Eye ={0,0,0}, At={0,0,1};
-    //DLightChallenge(scene);
+    DLightChallenge(scene);
     /* Cornell Box */
-    CornellBox(scene);
+    //CornellBox(scene);
     //DiffuseCornellBox(scene);
     // Camera parameters for the Cornell Box
     const Point Eye ={280,265,-500}, At={280,260,0};
@@ -84,7 +84,7 @@ int main(int argc, const char * argv[]) {
     //shd = new DistributedShader(&scene, RGB(0.1,0.1,0.8));
     shd = new PathTracing(&scene, RGB(0.,0.,0.2));
     // declare the renderer
-    int const spp=16;
+    int const spp=1024;
     
     bool const jitter=true;
     StandardRenderer myRender (cam, &scene, img, shd, spp, jitter);
